@@ -1,5 +1,5 @@
 {
-  "name": "extension",
+  "name": "CodeSentry",
   "displayName": "CodeSentry",
   "description": "",
   "version": "0.0.1",
@@ -10,12 +10,31 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./extension.js",
+  "main": "./src/extension.js",
   "contributes": {
-    "commands": [{
-      "command": "extension.helloWorld",
-      "title": "Hello World"
-    }]
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codesentry",
+          "title": "CodeSentry",
+          "icon": "resources/codesentry-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "codesentry": [
+        {
+          "id": "codesentryView",
+          "name": "Overview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "codesentry.openView",
+        "title": "Open CodeSentry View"
+      }
+    ]
   },
   "scripts": {
     "lint": "eslint .",
