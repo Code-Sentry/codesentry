@@ -1,4 +1,5 @@
 from .ScanFactory import ScanFactory
+import pkg_resources
 
 class Commands:
 
@@ -15,6 +16,12 @@ class Commands:
         choices=['sql-injection', 'xss', 'static-analysis'], 
         help="Specify the type of scan to run"
         )
+        self.parser.add_argument(
+            '--version', '-v',
+            action='version',
+            version=self.get_version(),
+            help="Show the version of the tool and exit"
+        )
     
     def getArgs(self):
         return self.parser.parse_args()
@@ -30,3 +37,6 @@ class Commands:
                 print(e)
         else:
             parser.print_help()
+
+    def get_version(self):
+        return pkg_resources.get_distribution('codesentry').version
