@@ -22,6 +22,12 @@ class Commands:
             version=self.get_version(),
             help="Show the version of the tool and exit"
         )
+        self.parser.add_argument(
+            '--directory', '-d',
+            type=str,
+            default='.',
+            help="Directory to scan for vulnerabilities"
+        )
     
     def getArgs(self):
         return self.parser.parse_args()
@@ -32,7 +38,7 @@ class Commands:
             try:
                 scan = ScanFactory.get_scan(args.scan)
                 print(f"Running: {scan.description()}")
-                scan.run()
+                scan.run(args.directory)
             except ValueError as e:
                 print(e)
         else:
