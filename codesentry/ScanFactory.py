@@ -1,5 +1,6 @@
 from .scans.methods.SQLInjectionScan import SQLInjectionScan
-# from .scans.methods.XSS.XSS import XSSScan
+from .scans.methods.XSSScan import XSSScan
+from .scans.methods.AllMethodScan import AllMethodScan
 # from .scans.methods.StaticAnalysis.StaticAnalysis import StaticAnalysisScan
 
 class ScanFactory:
@@ -7,7 +8,8 @@ class ScanFactory:
     def get_scan(scan_type):
         scans = {
             'sql-injection': SQLInjectionScan,
-            # 'xss': XSSScan,
+            'xss': XSSScan,
+            'full': AllMethodScan,
             # 'static-analysis': StaticAnalysisScan,
         }
         scan_class = scans.get(scan_type)

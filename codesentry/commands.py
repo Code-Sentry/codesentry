@@ -13,7 +13,7 @@ class Commands:
         # adicionar aqui os demais argumentos
         self.parser.add_argument(
         '--scan', 
-        choices=['sql-injection', 'xss', 'static-analysis'], 
+        choices=['sql-injection', 'xss', 'static-analysis', 'full'], 
         help="Specify the type of scan to run"
         )
         self.parser.add_argument(
