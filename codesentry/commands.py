@@ -1,5 +1,6 @@
 from .ScanFactory import ScanFactory
 import pkg_resources
+from .core.system import System
 
 class Commands:
 
@@ -7,6 +8,7 @@ class Commands:
         self.parser = parser
 
     def start(self):
+        System.isDockerRunning()
         self.addArguments()
 
     def addArguments(self):
