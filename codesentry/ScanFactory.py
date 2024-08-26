@@ -1,4 +1,4 @@
-from .scans.methods.SQLInjection.SQLInjectionScan import SQLInjectionScan
+from .scans.methods.SQLInjectionScan import SQLInjectionScan
 # from .scans.methods.XSS.XSS import XSSScan
 # from .scans.methods.StaticAnalysis.StaticAnalysis import StaticAnalysisScan
 
