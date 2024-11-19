@@ -43,8 +43,6 @@ class Commands:
                 scan.run(args.directory)
             except ValueError as e:
                 print(e)
-        else:
-            parser.print_help()
 
     def get_version(self):
         return pkg_resources.get_distribution('codesentry').version
