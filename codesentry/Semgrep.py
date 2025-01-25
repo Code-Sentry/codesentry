@@ -1,6 +1,7 @@
 import subprocess
 import json
 from typing import Dict, List, Optional
+from .report.ReportBuilder import *
 
 class SemgrepScan:
     def __init__(self, config: str = "auto", output_format: str = "json"):
@@ -39,6 +40,9 @@ class SemgrepScan:
             print(result.stdout)
             if result.returncode != 0:
                 print(f"Erro ao executar o Semgrep no Docker: {result.stderr}")
+            
+            report_builder = ReportBuilder(result.stdout)
+            report_builder.mount()
                 
         except FileNotFoundError:
             print("Docker não foi encontrado. Verifique se está instalado e disponível no PATH.")
