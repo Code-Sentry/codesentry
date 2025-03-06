@@ -37,7 +37,6 @@ class SemgrepScan:
                 encoding='utf-8'
             )
 
-            print(result.stdout)
             if result.returncode != 0:
                 print(f"Erro ao executar o Semgrep no Docker: {result.stderr}")
             

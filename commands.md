@@ -8,4 +8,4 @@ pip uninstall codesentry -y
 codesentry --version
 
 ## comando para testar os scans
-codesentry --scan full --directory C:/rojects/codesentry-extension 
+codesentry --scan full --directory C:\Projects\codesentry\test
