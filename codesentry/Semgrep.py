@@ -40,7 +40,7 @@ class SemgrepScan:
             if result.returncode != 0:
                 print(f"Erro ao executar o Semgrep no Docker: {result.stderr}")
             
-            report_builder = ReportBuilder(result.stdout)
+            report_builder = ReportBuilder(result.stdout, path)
             report_builder.mount()
                 
         except FileNotFoundError:

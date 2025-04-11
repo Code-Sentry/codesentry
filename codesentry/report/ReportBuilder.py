@@ -3,17 +3,23 @@ import io
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from datetime import datetime
+import os
+import json
 
 class ReportBuilder:
 
-    def __init__(self, result) -> None:
+    def __init__(self, result, path) -> None:
         if isinstance(result, str):
             self.result = json.loads(result)
 
         self.pathReport = "C:/Users/Kaio/Documents/"
+        nameFile = self.pathReport + "report_" + datetime.now().strftime("%Y%m%d%H%M%S") + ".pdf"
+        self.current_project = self.get_project(path)
 
-        self.canvas = canvas.Canvas(self.pathReport + "report_" + datetime.now().strftime("%Y%m%d%H%M%S") + ".pdf", pagesize=letter)
+        self.canvas = canvas.Canvas(nameFile, pagesize=letter)
         self.width, self.height = letter
+
+        self.save_path_report(nameFile)
         
     def mount(self):
         self.header()
@@ -38,7 +44,7 @@ class ReportBuilder:
         self.canvas.setFont("Helvetica", 12)
 
         for vulnerability in vulnerabilities_list:
-            print(vulnerability)
+            # print(vulnerability)
             if y_position < 100:
                 self.canvas.showPage()
                 y_position = self.height - 100
@@ -106,3 +112,41 @@ class ReportBuilder:
             y_position -= 20
             self.canvas.line(50, y_position, self.width - 40, y_position)
             y_position -= 10
+
+    def get_project(self, url):
+        try:
+            projects_path = os.path.join(os.path.expanduser('~'), 'Documents', 'projects.json')
+            with open(projects_path, "r") as file:
+                projects = json.load(file)
+        except FileNotFoundError:
+            raise FileNotFoundError("O arquivo 'projects.json' não foi encontrado.")
+
+        for project in projects:
+            if project.get("url") == url:
+                return project
+
+        raise ValueError("Nenhum projeto atual foi encontrado no arquivo 'projects.json'.")
+
+    def save_path_report(self, path):
+        try:
+            reports_path = os.path.join(os.path.expanduser('~'), 'Documents', 'reports.json')
+            with open(reports_path, "r") as file:
+                reports = json.load(file)
+        except FileNotFoundError:
+            reports = []
+
+        # print('project', self.current_project)
+        print('reports', reports)
+
+        new_report = {
+            "name": "Report 2",
+            "path": "http://example.com/project2",
+            "project": "Project 2",
+            "lastRun": null,
+            "status": "Pending",
+            "file": os.path.join(os.path.expanduser('~'), 'Downloads', 'Language to Go.pdf')
+        }
+        reports.append(new_report)
+
+        with open("reports.json", "w") as file:
+            json.dump(reports, file, indent=4)
