@@ -135,18 +135,15 @@ class ReportBuilder:
         except FileNotFoundError:
             reports = []
 
-        # print('project', self.current_project)
-        print('reports', reports)
-
         new_report = {
-            "name": "Report 2",
-            "path": "http://example.com/project2",
-            "project": "Project 2",
-            "lastRun": null,
-            "status": "Pending",
-            "file": os.path.join(os.path.expanduser('~'), 'Downloads', 'Language to Go.pdf')
+            "name": self.current_project.get("name", "N/A") + " " + datetime.today().strftime('%d/%m/%Y'),
+            "path": self.current_project.get("url", "N/A"),
+            "project": self.current_project.get("name", "N/A"),
+            "lastRun": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            "status": "Completed",
+            "file": path
         }
         reports.append(new_report)
 
-        with open("reports.json", "w") as file:
+        with open(reports_path, "w") as file:
             json.dump(reports, file, indent=4)
