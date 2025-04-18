@@ -1,4 +1,3 @@
-from ..core.DatabaseManager import *
 import io
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
