@@ -1,7 +1,7 @@
 import subprocess
 import json
 from typing import Dict, List, Optional
-from .report.ReportBuilder import *
+# from .report.ReportBuilder import *
 
 class SemgrepScan:
     def __init__(self, config: str = "auto", output_format: str = "json"):
