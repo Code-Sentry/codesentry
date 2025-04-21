@@ -49,24 +49,58 @@ class ReportBuilder:
                 y_position = self.height - 100
 
             # Adiciona informacoes iniciais
-            self.canvas.drawString(50,  y_position, "Severidade: " + vulnerability.get('extra', {}).get('severity', 'N/A'))
-            y_position -= 20
-            self.canvas.drawString(50,  y_position, "Caminho do Arquivo: " + vulnerability.get('path', 'N/A'))
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "Severidade:")
+            text_width = self.canvas.stringWidth("Severidade:", "Helvetica-Bold", 12)
+            self.canvas.setFont("Helvetica", 12)  # Retorna à fonte normal
+            self.canvas.drawString(50 + text_width + 5, y_position, vulnerability.get('extra', {}).get('severity', 'N/A'))
             y_position -= 20
 
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "Caminho do Arquivo:")
+            text_width = self.canvas.stringWidth("Caminho do Arquivo:", "Helvetica-Bold", 12)
+            self.canvas.setFont("Helvetica", 12)
+            self.canvas.drawString(50 + text_width + 5, y_position, vulnerability.get('path', 'N/A'))
+            y_position -= 20
+
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "Classe de vulnerabilidade:")
+            text_width = self.canvas.stringWidth("Classe de vulnerabilidade:", "Helvetica-Bold", 12)
+            self.canvas.setFont("Helvetica", 12)
             vulnerability_class = vulnerability.get('extra', {}).get('metadata', {}).get('vulnerability_class', [])
             if isinstance(vulnerability_class, list):
                 vulnerability_class = ' | '.join(vulnerability_class)
             else:
                 vulnerability_class = str(vulnerability_class)
-            self.canvas.drawString(50, y_position, "Classe de vulnerabilidade: " + vulnerability_class)
+            self.canvas.drawString(50 + text_width + 5, y_position, vulnerability_class)
             y_position -= 20
 
-            self.canvas.drawString(50,  y_position, "Mensagem: " + vulnerability.get('extra', {}).get('message', 'N/A'))
+            message = vulnerability.get('extra', {}).get('message', 'N/A')
+            if message:
+                max_width = self.width - 100
+                words = message.split()
+                self.canvas.setFont("Helvetica-Bold", 12)
+                line = "Mensagem: "
+                text_width = self.canvas.stringWidth(line, "Helvetica-Bold", 12)
+                self.canvas.drawString(50, y_position, line.strip())
+                self.canvas.setFont("Helvetica", 12)
+                line = ""
+                for word in words:
+                    if self.canvas.stringWidth(line + word, "Helvetica", 12) < max_width - text_width:
+                        line += word + " "
+                    else:
+                        self.canvas.drawString(50 + text_width, y_position, line.strip())
+                        y_position -= 20
+                        line = word + " "
+                if line:
+                    self.canvas.drawString(50 + text_width, y_position, line.strip())
+                y_position -= 20
             y_position -= 20
 
             # Adiciona linhas de início e fim
-            self.canvas.drawString(50,  y_position, "Linhas " )
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "Linhas ")
+            self.canvas.setFont("Helvetica", 12)
             y_position -= 20
             self.canvas.drawString(70,  y_position, "Inicio: " + str(vulnerability.get('start', {}).get('line', 'N/A')))
             self.canvas.drawString(150,  y_position, "Final: " + str(vulnerability.get('end', {}).get('line', 'N/A')))
@@ -78,10 +112,18 @@ class ReportBuilder:
                 technologies = ' | '.join(technologies)
             else:
                 technologies = str(technologies)
-            self.canvas.drawString(50, y_position, "Tecnologia: " + technologies)
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "Tecnologia:")
+            text_width = self.canvas.stringWidth("Tecnologia:", "Helvetica-Bold", 12)
+            self.canvas.setFont("Helvetica", 12)
+            self.canvas.drawString(50 + text_width + 5, y_position, technologies)
 
             y_position -= 20
-            self.canvas.drawString(50, y_position, "Impacto: " + vulnerability.get('extra', {}).get('metadata', {}).get('impact', 'N/A'))
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "Impacto:")
+            text_width = self.canvas.stringWidth("Impacto:", "Helvetica-Bold", 12)
+            self.canvas.setFont("Helvetica", 12)
+            self.canvas.drawString(50 + text_width + 5, y_position, vulnerability.get('extra', {}).get('metadata', {}).get('impact', 'N/A'))
             y_position -= 20
 
             cwe_list = vulnerability.get('extra', {}).get('metadata', {}).get('cwe', [])
@@ -89,7 +131,24 @@ class ReportBuilder:
                 cwe_text = ' | '.join(cwe_list)
             else:
                 cwe_text = str(cwe_list)
-            self.canvas.drawString(50, y_position, "CWE: " + cwe_text)
+
+            max_width = self.width - 100
+            lines = cwe_text.split(' | ')
+            self.canvas.setFont("Helvetica-Bold", 12)
+            line = "CWE: "
+            text_width = self.canvas.stringWidth(line, "Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, line.strip())
+            self.canvas.setFont("Helvetica", 12)
+            line = ""
+            for cwe in lines:
+                if self.canvas.stringWidth(line + cwe, "Helvetica", 12) < max_width - text_width:
+                    line += cwe + " | "
+                else:
+                    self.canvas.drawString(50 + text_width, y_position, line.strip(' | '))
+                    y_position -= 20
+                    line = cwe + " | "
+            if line:
+                self.canvas.drawString(50 + text_width, y_position, line.strip(' | '))
             y_position -= 20
 
             owasp_list = vulnerability.get('extra', {}).get('metadata', {}).get('owasp', [])
@@ -97,7 +156,11 @@ class ReportBuilder:
                 owasp_text = ' | '.join(owasp_list)
             else:
                 owasp_text = str(owasp_list)
-            self.canvas.drawString(50, y_position, "OWASP: " + owasp_text)
+            self.canvas.setFont("Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, "OWASP:")
+            text_width = self.canvas.stringWidth("OWASP:", "Helvetica-Bold", 12)
+            self.canvas.setFont("Helvetica", 12)
+            self.canvas.drawString(50 + text_width + 5, y_position, owasp_text)
             y_position -= 20
 
             references = vulnerability.get('extra', {}).get('metadata', {}).get('references', [])
@@ -105,7 +168,24 @@ class ReportBuilder:
                 references_text = ' | '.join(references)
             else:
                 references_text = str(references)
-            self.canvas.drawString(50, y_position, "Referências externas: " + references_text)
+
+            max_width = self.width - 100
+            lines = references_text.split(' | ')
+            self.canvas.setFont("Helvetica-Bold", 12)
+            line = "Referências externas: "
+            text_width = self.canvas.stringWidth(line, "Helvetica-Bold", 12)
+            self.canvas.drawString(50, y_position, line.strip())
+            self.canvas.setFont("Helvetica", 12)
+            line = ""
+            for reference in lines:
+                if self.canvas.stringWidth(line + reference, "Helvetica", 12) < max_width - text_width:
+                    line += reference + " | "
+                else:
+                    self.canvas.drawString(50 + text_width, y_position, line.strip(' | '))
+                    y_position -= 20
+                    line = reference + " | "
+            if line:
+                self.canvas.drawString(50 + text_width, y_position, line.strip(' | '))
 
 
             y_position -= 20
