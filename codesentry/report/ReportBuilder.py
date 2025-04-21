@@ -121,7 +121,7 @@ class ReportBuilder:
             raise FileNotFoundError("O arquivo 'projects.json' não foi encontrado.")
 
         for project in projects:
-            if project.get("url") == url:
+            if project.get("url").replace("\\", "\\\\") == str(url):
                 return project
 
         raise ValueError("Nenhum projeto atual foi encontrado no arquivo 'projects.json'.")
